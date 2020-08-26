@@ -6,12 +6,14 @@
             id,
             sentence,
             createtime,
-            excutortime
+            excutortime,
+            excutormethod
         ) values (
             uuid_short(),
              #{param.sentence},
-             now(),
-             #{param.excutortime}
+             #{param.createtime},
+             #{param.excutortime},
+             #{param.executormethod} 
          )
    </insert>
 </mapper>

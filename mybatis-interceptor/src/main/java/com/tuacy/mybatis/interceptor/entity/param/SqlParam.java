@@ -1,10 +1,17 @@
 package com.tuacy.mybatis.interceptor.entity.param;
+
+import java.util.Date;
+
 /**
- * 记录sql插入时间
+ *  慢SQL执行记录
  * @author Administrator
  *
  */
 public class SqlParam {
+  /**
+   *执行sql方法
+   */
+  private String executormethod;
   /**
    *sql语句
    */
@@ -13,6 +20,13 @@ public class SqlParam {
    * 执行时间
    */
   private  String excutortime;
+  /**
+   *  创建时间
+   * @return
+   */
+  private  Date    createtime;
+  
+  
 	public String getSentence() {
 		return sentence;
 	}
@@ -25,5 +39,16 @@ public class SqlParam {
 	public void setExcutortime(String excutortime) {
 		this.excutortime = excutortime;
 	}
-  
+	public String getExecutormethod() {
+		return executormethod;
+	}
+	public void setExecutormethod(String executormethod) {
+		this.executormethod = executormethod;
+	}
+	public Date getCreatetime() {
+		return createtime;
+	}
+	public void setCreatetime(Date createtime) {
+		this.createtime = createtime;
+	}
 }

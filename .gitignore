@@ -17,3 +17,8 @@ actuator/actuator.iml
 url-decoration/url-decoration.iml
 
 mybatis-interceptor/mybatis-interceptor.iml
+actuator/.settings/org.eclipse.m2e.core.prefs
+actuator/.settings/org.eclipse.jdt.core.prefs
+actuator/.settings/org.eclipse.core.resources.prefs
+.settings/org.eclipse.core.resources.prefs
+.settings/org.eclipse.m2e.core.prefs

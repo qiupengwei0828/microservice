@@ -11,10 +11,12 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import com.tuacy.mybatis.interceptor.entity.param.SqlParam;
 import com.tuacy.mybatis.interceptor.mapper.SlowSqlRecordMapper;
+import com.tuacy.mybatis.interceptor.service.IAlarmManageService;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -29,6 +31,9 @@ import java.util.Properties;
  * 1. 打印mysql完整的执行语句
  * 2. 打印mysql语句执行时间
  * 这里我们拦截Executor里面的query和update方法
+ * 去除了update的拦截，因为给数据库添加SQL日志的，调用update 会造成执行死循环
+ * 
+ * 
  */
 @Intercepts({
         @Signature(
@@ -36,20 +41,19 @@ import java.util.Properties;
                 type = Executor.class,
                 args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class}
         ),
-        @Signature(
-                type = Executor.class,
-                method = "update",
-                args = {MappedStatement.class, Object.class}
-        )
+//     
+//        @Signature(
+//                type = Executor.class,
+//                method = "update",
+//                args = {MappedStatement.class, Object.class}
+//        )
 })
 //加入注解,log拦截
 @Service
 public class LogInterceptor implements Interceptor {
 
-	@Autowired
-	SlowSqlRecordMapper slowSqlRecordMapper;
-
-	
+	 @Autowired
+	 private ApplicationContext applicationContext;
     /**
      * 是否显示语句的执行时间
      */
@@ -81,11 +85,14 @@ public class LogInterceptor implements Interceptor {
             String sqlTimeLog = sqlId + " 方法对应sql执行时间:" + excutorTime + " ms";
             System.out.println(sqlTimeLog);
             SqlParam   param=new SqlParam();
+            param.setCreatetime(new Date());
             param.setSentence(sql);
+            param.setExecutormethod(sqlId);
             param.setExcutortime(String.valueOf(excutorTime));
+            SlowSqlRecordMapper  slowSqlRecordMapper =applicationContext.getBean(SlowSqlRecordMapper.class);
             slowSqlRecordMapper.insertSqlRecord(param);
+            return re;
         }
-       
         return re;
     }
 
@@ -120,7 +127,7 @@ public class LogInterceptor implements Interceptor {
     }
 
     private static String getSql(Configuration configuration, BoundSql boundSql, String sqlId) {
-        return sqlId + " 方法对应sql执行语句:" + assembleSql(configuration, boundSql);
+        return  assembleSql(configuration, boundSql);
     }
 
     /**
@@ -168,7 +175,6 @@ public class LogInterceptor implements Interceptor {
 
     /**
      * 组装完整的sql语句 -- 把对应的参数都代入到sql语句里面
-     *
      * @param configuration Configuration
      * @param boundSql      BoundSql
      * @return sql完整语句

@@ -20,8 +20,8 @@ public class UserManageServiceImpl implements IUserManageService {
         this.userManageMapper = userManageMapper;
     }
 
-    @Transactional(rollbackFor = Exception.class, readOnly = true)
-    @Override
+//    @Transactional(rollbackFor = Exception.class, readOnly = true)
+//    @Override
     public List<UserInfoVo> getAllUserList() {
         return userManageMapper.getAllUserList();
     }
@@ -29,8 +29,8 @@ public class UserManageServiceImpl implements IUserManageService {
     /**
      * 分页获取所有的用户列表信息
      */
-    @Transactional(rollbackFor = Exception.class, readOnly = true)
-    @Override
+//    @Transactional(rollbackFor = Exception.class, readOnly = true)
+//    @Override
     public PageView<UserInfoVo> getUserListPage(PageView<UserInfoVo> pageView) {
         pageView.setLists(userManageMapper.getAllUserListPage(pageView));
         return pageView;
@@ -40,8 +40,8 @@ public class UserManageServiceImpl implements IUserManageService {
     /**
      * 分页获取所有的用户列表信息 -- 自定义count查询
      */
-    @Transactional(rollbackFor = Exception.class, readOnly = true)
-    @Override
+//    @Transactional(rollbackFor = Exception.class, readOnly = true)
+//    @Override
     public PageView<UserInfoVo> getUserListPageManualCount(PageView<UserInfoVo> pageView) {
         pageView.setLists(userManageMapper.getAllUserListPageManualCount(pageView));
         return pageView;
